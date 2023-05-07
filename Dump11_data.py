@@ -10,6 +10,9 @@ from PIL import Image
 
 
 def read_img(path):
+    """
+    读取图片路径和标签
+    """
     rail_path_label = []
     with open(os.path.join(path, 'images.csv')) as f:
         reader = csv.reader(f)
@@ -21,6 +24,9 @@ def read_img(path):
 
 
 def rail_dic(path_label):
+    """
+    读取钢轨图像数据和标签
+    """
     Rail = {}
     for i in range(len(path_label)):
         image_path = path_label[i][0]
@@ -33,6 +39,9 @@ def rail_dic(path_label):
 
 # 多模态
 def gaf_dic(dic, path_label, idx):
+    """
+    滑动窗口下读取GAF图像数据和标签
+    """
     for i in range(len(path_label)):
         image_path = path_label[i][0]
         image = Image.open(image_path).convert('RGB')
@@ -42,6 +51,9 @@ def gaf_dic(dic, path_label, idx):
 
 # 单模态
 # def gaf_dic(path_label):
+#     """
+#     非滑动窗口下读取GAF图像数据和标签
+#     """
 #     GAF = {}
 #     for i in range(len(path_label)):
 #         image_path = path_label[i][0]
@@ -61,6 +73,9 @@ def label_process(labels):
 
 
 def dataset(rail, gaf):
+    """
+    制作数据集，按照8/1/1划分，一张钢轨图像对应不同数量的GAF图像
+    """
     keys = list(rail['Rail_img'].keys())
     random.shuffle(keys)
 
