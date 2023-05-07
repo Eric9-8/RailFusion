@@ -31,6 +31,7 @@ def rail_dic(path_label):
     return Rail
 
 
+# 多模态
 def gaf_dic(dic, path_label, idx):
     for i in range(len(path_label)):
         image_path = path_label[i][0]
@@ -38,6 +39,17 @@ def gaf_dic(dic, path_label, idx):
         dic.setdefault('GAF_img_{j}'.format(j=idx), {})[i] = [image]
 
     return dic
+
+# 单模态
+# def gaf_dic(path_label):
+#     GAF = {}
+#     for i in range(len(path_label)):
+#         image_path = path_label[i][0]
+#         image = Image.open(image_path).convert('RGB')
+#         GAF.setdefault('GAF_img', {})[i] = [image]
+#         # GAFs.setdefault('Rail_label', {})[i] = path_label[i][1]
+
+    # return GAF
 
 
 def get_data(dic, key_s):
@@ -66,7 +78,7 @@ def dataset(rail, gaf):
 
     Train = {'RAIL': RAIL_Train, 'LABEL': LABEL_Train}
     Valid = {'RAIL': RAIL_Valid, 'LABEL': LABEL_Valid}
-    Test = {'RAIL': RAIL_Test, 'LABEL': LABEL_Valid}
+    Test = {'RAIL': RAIL_Test, 'LABEL': LABEL_Test}
 
     for idx, itm in enumerate(list(gaf.keys())):
         for tk in train_keys:
@@ -85,21 +97,54 @@ def dataset(rail, gaf):
 
 
 if __name__ == "__main__":
+    # gaf image
+    path2 = r'D:\Pytorch\Fusion_transformer\data\Sample366\GAFs_30_times_divide'
+    path4 = r'D:\Pytorch\Fusion_transformer\data\Sample140\GAFs_30_times_divide_fusion_1'
+    path8 = r'D:\Pytorch\Fusion_transformer\data\Sample140\GAFs'
 
+    path9 = r'D:\Pytorch\Fusion_transformer\data\Sample75\GAFs_30_times_imf_channel4'
+    path10 = r'D:\Pytorch\Fusion_transformer\data\Sample75\GAFs_30_times_imf_fusion_5'
+
+    path12 = r'D:\Pytorch\Fusion_transformer\data\Sample75\GAFs_30_times_fusion_5'
+
+    path13 = r'D:\Pytorch\Fusion_transformer\data\Sample75\GAFs_30_times_rec_channel4'
+    path14 = r'D:\Pytorch\Fusion_transformer\data\Sample75\GAFs_30_times_rec_fusion_1'
+
+    path15 = r'D:\Pytorch\Fusion_transformer\data\Sample75\GAFs_30_times_rec_TQWT_channel4'
+    path16 = r'D:\Pytorch\Fusion_transformer\data\Sample75\GAFs_30_times_rec_TQWT_fusion_5'
+
+    path17 = r'D:\Pytorch\Fusion_transformer\data\Sample75\GAFs_30_times_rec_TQWT_fusion_nowindow_1'
+
+    path18 = r'D:\Pytorch\Fusion_transformer\data\Sample75\GAFs_30_times_ceemdan_fusion_1'
+
+    # rail image
     path1 = r'D:\Pytorch\Fusion_transformer\data\Sample366\figures366_record'
-    path2 = r'D:\Pytorch\Fusion_transformer\data\Sample366\GAFs_10_times_divide'
+    path3 = r'D:\Pytorch\Fusion_lowrank\data\original_figures'
+    path5 = r'D:\Pytorch\Fusion_transformer\data\Sample140\Rail_image_cutting'
+    path6 = r'D:\Pytorch\Fusion_transformer\data\Sample140\Rail_square_image'
 
-    root_files = os.listdir(path2)
+    path11 = r'D:\Pytorch\Fusion_transformer\data\Sample75\RailOriginal'
+
+    # gray image
+    path7 = r'D:\Pytorch\Fusion_transformer\data\Sample140\Grays_fusion'
+
+    # 多模态
+    root_files = os.listdir(path18)
     routes = [folder for folder in root_files]
     GAF = {}
     for index, item in enumerate(routes):
-        route_dir = os.path.join(path2, item)
+        route_dir = os.path.join(path18, item)
         gaf_img_label = read_img(route_dir)
         GAF = gaf_dic(GAF, gaf_img_label, index)
-    rail_img_label = read_img(path1)
+
+    # 单模态
+    # gaf_img_label = read_img(path17)
+    # GAF = gaf_dic(gaf_img_label)
+
+    rail_img_label = read_img(path11)
     RAIL = rail_dic(rail_img_label)
 
     Rail_dataset = dataset(RAIL, GAF)
-    file = open('/Data/Sample366/Dataset_11_MODE.pkl', 'wb')
+    file = open('D:/Pytorch/Fusion_transformer/data/Sample75/Dataset_30_ceemdan_fusion_1.pkl', 'wb')
     pickle.dump(Rail_dataset, file)
     file.close()
